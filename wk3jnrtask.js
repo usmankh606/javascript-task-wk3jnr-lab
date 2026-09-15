@@ -1,19 +1,18 @@
-orderCustomer = [
-
-    {CName:"Ali", PName:"burger", qty:3, price:500, Status:"pending"},
-    {CName:"Ahmed", PName:"pizza", qty:2, price:1500, Status:"shipped"},
-    {CName:"Samad", PName:"chicken karahi", qty:3, price:1800, Status:"delivered"}
+const orderCustomer = [
+    { CName: "Ali", PName: "burger", qty: 3, price: 500, Status: "pending" },
+    { CName: "Ahmed", PName: "pizza", qty: 2, price: 1500, Status: "shipped" },
+    { CName: "Samad", PName: "chicken karahi", qty: 3, price: 1800, Status: "delivered" }
 ];
-//calculateOrderTotal
+//step1 Calculate Order Total
 const calculateOrderTotal = (order) => {
     return order.qty * order.price;
 };
 
 for (let i = 0; i < orderCustomer.length; i++) {
-    console.log(orderCustomer[i].PName + " Total = " +calculateOrderTotal(orderCustomer[i]));
-
+    console.log(orderCustomer[i].PName + " Total = " + calculateOrderTotal(orderCustomer[i]));
 }
-//findCustomerSpending
+
+//step2 customer spending
 const findCustomerSpending = (CName) => {
     let total = 0;
     for (let i = 0; i < orderCustomer.length; i++) {
@@ -25,23 +24,24 @@ const findCustomerSpending = (CName) => {
 };
 
 console.log("Ali Spending = " + findCustomerSpending("Ali"));
-//step 3 filterOrders
+
+// step 3 filter 
+
 const filterOrders = (Status) => {
     let result = [];
-
     for (let i = 0; i < orderCustomer.length; i++) {
         if (orderCustomer[i].Status === Status) {
             result.push(orderCustomer[i]);
         }
     }
-
     return result;
 };
 
 console.log(filterOrders("pending"));
 console.log(filterOrders("shipped"));
 console.log(filterOrders("delivered"));
-//step4
+
+//step4 best selling product
 const bestSellingProduct = () => {
     let productQty = {};
 
@@ -69,11 +69,12 @@ const bestSellingProduct = () => {
 };
 
 console.log("Best Selling Product = " + bestSellingProduct());
-//step5 
-const applyDiscount = (order) => {
-    let total = order.qty * order.price;
+//step 5
 
-    if (total > 1000) {
+const applyDiscount = (order) => {
+    let total = calculateOrderTotal(order);
+
+    if (total > 10000) {
         total = total - (total * 0.10);
     }
 
@@ -81,24 +82,42 @@ const applyDiscount = (order) => {
 };
 
 for (let i = 0; i < orderCustomer.length; i++) {
-    console.log(
-        orderCustomer[i].PName + " Final Price = " +
-        applyDiscount(orderCustomer[i])
-    );
+    console.log(orderCustomer[i].PName + " Final Price = " + applyDiscount(orderCustomer[i]));
 }
-//step6
-const countOrdersByStatus = (Status) => {
-    let count = 0;
+//step 6
+const findHighestOrder = () => {
+    let highestOrder = orderCustomer[0];
+    let highestAmount = applyDiscount(orderCustomer[0]);
 
-    for (let i = 0; i < orderCustomer.length; i++) {
-        if (orderCustomer[i].Status === Status) {
-            count++;
+    for (let i = 1; i < orderCustomer.length; i++) {
+        let finalAmount = applyDiscount(orderCustomer[i]);
+
+        if (finalAmount > highestAmount) {
+            highestAmount = finalAmount;
+            highestOrder = orderCustomer[i];
         }
     }
 
-    return count;
+    return highestOrder.CName;
 };
 
-console.log("Pending Orders = " + countOrdersByStatus("pending"));
-console.log("Shipped Orders = " + countOrdersByStatus("shipped"));
-console.log("Delivered Orders = " + countOrdersByStatus("delivered"));
+console.log("Highest Order Customer = " + findHighestOrder());
+
+//step 7
+
+const displaySummary = () => {
+    for (let i = 0; i < orderCustomer.length; i++) {
+        let originalTotal = calculateOrderTotal(orderCustomer[i]);
+        let finalAmount = applyDiscount(orderCustomer[i]);
+        let discount = originalTotal - finalAmount;
+
+        console.log("Customer Name = " + orderCustomer[i].CName);
+        console.log("Product = " + orderCustomer[i].PName);
+        console.log("Original Total = " + originalTotal);
+        console.log("Discount = " + discount);
+        console.log("Final Amount = " + finalAmount);
+        console.log("--------------------------");
+    }
+};
+
+displaySummary();
